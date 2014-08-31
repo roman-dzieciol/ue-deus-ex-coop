@@ -1,0 +1,173 @@
+
+
+
+	
+//#include <wx/utils.h>
+//#include <wx/regex.h>
+//#include <wx/datetime.h>
+//#include <wx/xml/xml.h>
+//#include <wx/tokenzr.h>
+//#include <wx/arrstr.h>
+//
+//#include <wx/dir.h>
+//#include <wx/file.h>
+//#include <wx/ffile.h>
+//#include <wx/filename.h>
+//#include <wx/textfile.h>
+//#include <wx/wfstream.h>
+//#include <wx/dynlib.h>
+//#include "wx/cmdline.h"
+//#include "wx/wfstream.h"
+
+
+
+
+//
+// Libs
+//
+
+//#ifdef _DEBUG
+//	#pragma comment(lib, "wxbase26ud")
+//	/*#pragma comment(lib, "wxbase26ud_net")
+//	#pragma comment(lib, "wxbase26ud_odbc")
+//	#pragma comment(lib, "wxbase26ud_xml")
+//	#pragma comment(lib, "wxexpatd")
+//	#pragma comment(lib, "wxjpegd")
+//	#pragma comment(lib, "wxmsw26ud_adv")
+//	#pragma comment(lib, "wxmsw26ud_core")
+//	#pragma comment(lib, "wxmsw26ud_dbgrid")
+//	#pragma comment(lib, "wxmsw26ud_gl")
+//	#pragma comment(lib, "wxmsw26ud_html")
+//	#pragma comment(lib, "wxmsw26ud_media")
+//	#pragma comment(lib, "wxmsw26ud_qa")
+//	#pragma comment(lib, "wxmsw26ud_xrc")
+//	#pragma comment(lib, "wxpngd")
+//	#pragma comment(lib, "wxregexud")
+//	#pragma comment(lib, "wxtiffd")
+//	#pragma comment(lib, "wxzlibd")*/
+//#else
+//	#pragma comment(lib, "wxbase26u")
+//	/*#pragma comment(lib, "wxbase26u_net")
+//	#pragma comment(lib, "wxbase26u_odbc")
+//	#pragma comment(lib, "wxbase26u_xml")
+//	#pragma comment(lib, "wxexpat")
+//	#pragma comment(lib, "wxjpeg")
+//	#pragma comment(lib, "wxmsw26u_adv")
+//	#pragma comment(lib, "wxmsw26u_core")
+//	#pragma comment(lib, "wxmsw26u_dbgrid")
+//	#pragma comment(lib, "wxmsw26u_gl")
+//	#pragma comment(lib, "wxmsw26u_html")
+//	#pragma comment(lib, "wxmsw26u_media")
+//	#pragma comment(lib, "wxmsw26u_qa")
+//	#pragma comment(lib, "wxmsw26u_xrc")
+//	#pragma comment(lib, "wxpng")
+//	#pragma comment(lib, "wxregexu")
+//	#pragma comment(lib, "wxtiff")
+//	#pragma comment(lib, "wxzlib")*/
+//#endif
+
+
+
+
+//template<class _Ty>
+//	struct less
+//		: public binary_function<_Ty, _Ty, bool>
+//	{	// functor for operator<
+//	bool operator()(const _Ty& _Left, const _Ty& _Right) const
+//		{	// apply operator< to operands
+//		return (_Left < _Right);
+//		}
+//	};
+
+
+// ============================================================================
+// upSortedVector :: sorted vector with reduced reallocation
+// ============================================================================
+//template<class T>
+//class upSortedVector
+//{
+//private:
+//	vector<T> Data;
+//	vector<size_t> Index;
+//	typedef vector<T>::iterator ItData;
+//
+//public:
+//    ItData Add( T d )
+//	{	
+//		ItData it = std::lower_bound( Data.begin(), Data.end(), d );
+//		if( *it == d )
+//		{
+//			return it;
+//		}
+//		else
+//		{
+//		}
+//		std::less<int>()
+//		//bSorted = false;
+//		//Map.push_back(d);
+//		//return static_cast<int>(Data.size());
+//	}
+//
+//};
+
+
+// ============================================================================
+// updDwordMap
+// ============================================================================
+//class updDwordMap
+//{
+//public: 
+//	vector<dword> Map;
+//	bool bSorted;
+//
+//public:
+//	updDwordMap() : bSorted(true)
+//	{
+//		Map.reserve(64);
+//		Map.push_back(0x00000000);
+//		Map.push_back(0xFFFFFFFF);
+//	}
+//
+//    int Get( dword d )
+//	{
+//		return Map AT(d);
+//	}
+//
+//    int Find( dword d )
+//	{
+//		if( !bSorted )
+//			Sort();
+//
+//		//dword d = std::lower_bound( Map.begin(), Map.end(), d );
+//		//int i = 
+//	}
+//
+//    dword At( int i )
+//	{
+//		return Map AT(i);
+//	}
+//
+//    int Add( dword d )
+//	{	
+//		vector<dword>::iterator it = std::lower_bound( Map.begin(), Map.end(), d );
+//		if( *it == d )
+//		{
+//			return std::distance( Map.begin(), it );
+//		}
+//		else
+//		{
+//		}
+//
+//		//bSorted = false;
+//		//Map.push_back(d);
+//		return static_cast<int>(Map.size());
+//	}
+//
+//	void Sort()
+//	{
+//		std::sort( Map.begin(), Map.end() );
+//		bSorted = true;
+//	}
+//};
+
+

@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "upCmd", "upCmd.vcproj", "{8A9F2D63-A151-4DC8-94EB-14A8A4EAF3EE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RpTest", "..\RpTest\RpTest.vcproj", "{F0615B6F-A2FC-4A70-BD51-A12E6D345C43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8A9F2D63-A151-4DC8-94EB-14A8A4EAF3EE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8A9F2D63-A151-4DC8-94EB-14A8A4EAF3EE}.Debug|Win32.Build.0 = Debug|Win32
+		{8A9F2D63-A151-4DC8-94EB-14A8A4EAF3EE}.Release|Win32.ActiveCfg = Release|Win32
+		{8A9F2D63-A151-4DC8-94EB-14A8A4EAF3EE}.Release|Win32.Build.0 = Release|Win32
+		{F0615B6F-A2FC-4A70-BD51-A12E6D345C43}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F0615B6F-A2FC-4A70-BD51-A12E6D345C43}.Debug|Win32.Build.0 = Debug|Win32
+		{F0615B6F-A2FC-4A70-BD51-A12E6D345C43}.Release|Win32.ActiveCfg = Release|Win32
+		{F0615B6F-A2FC-4A70-BD51-A12E6D345C43}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

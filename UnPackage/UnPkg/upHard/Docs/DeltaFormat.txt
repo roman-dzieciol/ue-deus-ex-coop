@@ -1,0 +1,220 @@
+// ============================================================================
+//  UnPackage :: Cross-platform toolkit for Unreal Engine packages
+//  Copyright (C) 2006  Roman Dzieciol. All Rights Reserved.
+// ============================================================================
+
+// ============================================================================
+// Ideas
+// ============================================================================
+
+//
+// name reference negative space
+//
+
+- negative indexes point to basis item index -n-1
+- data that can be read from basis item is not serialized in delta
+
+
+//
+// delta indexes
+//
+
+- used to encode relative delta number in negative space of name reference
+- many neighbouring basis references differ by small number
+- by saving delta instead of full number index can be saved in single byte
+
+
+// ============================================================================
+// File Layout
+// ============================================================================
+
+- Header
+
+- Name Table
+- Export Table
+- Import Table
+- Generation Table
+
+- Dword Table
+- Qword Table
+- Property Table
+
+- Hashes
+
+
+// ============================================================================
+// Headers
+// ============================================================================
+
+//
+// Header
+//
+
+qword Signature; // 0x0a1a0a0d44505589
+dword Version;
+dword Flags;
+
+dword TargetVersion;
+dword TargetFlags;
+byte TargetGuid[16];
+dword TargetFileSize;
+dword TargetNamesOffset;
+dword TargetExportsOffset;
+dword TargetImportsOffset;
+
+dword NameTableSize;
+dword NameTableOffset;
+
+dword ExportTableSize;
+dword ExportTableOffset;
+
+dword ImportTableSize;
+dword ImportTableOffset;
+
+dword GenerationTableSize;
+dword GenerationTableOffset;
+
+// optional?
+dword DwordTableSize;
+dword DwordTableOffset;
+
+// optional?
+dword QwordTableSize;
+dword QwordTableOffset;
+
+// optional?
+dword PropertyTableSize;
+dword PropertyTableOffset;
+
+
+//
+// Hashes
+//
+
+byte BasisHash[]; // sha-1
+byte TargetHash[]; // sha-1
+byte DeltaHash[]; // sha-1
+
+
+// ============================================================================
+// Tables
+// ============================================================================
+
+//
+// DwordTable Item
+//
+
+Obligatory values:
+DwordTable[0] = 0x00000000
+DwordTable[1] = 0xFFFFFFFF
+
+dword Value;
+
+
+//
+// QwordTable Item
+//
+
+Obligatory values:
+QwordTable[0] = 0x0000000000000000
+QwordTable[1] = 0xFFFFFFFFFFFFFFFF
+
+qword Value;
+
+
+//
+// PropertyTable Item
+//
+
+Holds common properties such as reference to levelinfo
+
+uppProperty Property;
+
+
+//
+// NameTable Item
+//
+
+LASCIIZ Name; // if length < 0, read from item -i-1 in basis nametable instead
+Index Flags; // pointer to dword table, if -1 same as last
+
+
+//
+// ExportTable Item
+//
+
+Index ObjName; // if <0 read ObjName, Class, Super, Package, ObjFlags from basis item -i-1 instead
+Index Class;
+Index Super;
+Index Package;
+Index ObjFlags; // Dword table, if -1 same as last
+Index SerialSize; // in target file
+Index SerialOffset; // if SerialSize > 0, if -1 use lastitem.SerialSize + lastitem.SerialOffset
+Index DeltaSize; // in delta file
+Index DeltaOffset; // if DeltaSize > 0, if -1 use lastitem.DeltaSize + lastitem.DeltaOffset
+
+
+//
+// ImportTable Item
+//
+
+Index ObjName; // if <0 read everything from basis file item #-i-1 instead
+Index ClassPackage; // if -1 same as last
+Index ClassName; // if -1 same as last
+Index Package;
+
+
+//
+// GenerationTable Item
+//
+
+Index ExportCount; // if <0 read item -i-1 from basis file
+Index NameCount;
+
+
+
+// ============================================================================
+//	Object
+// ============================================================================
+	
+//
+// Object
+//
+
+StateFrame;
+Properties;
+ClassData;
+
+
+//
+// Properties
+//
+
+Index Name; // if < 0, use basis property -i-1
+
+
+// ============================================================================
+//	Structs
+// ============================================================================
+
+If the item exists in basis package, each struct saves only modified members.
+First struct member, compressed bitmask, stores member modification info.
+If bitmask is equal 0, nothing changed.
+
+
+//
+// StateFrame
+//
+
+Index Node;
+Index StateNode;
+Index ProbeMask; // qword table
+Index LatentAction; // dword table
+Index Offset;
+
+
+
+
+// ============================================================================
+//	The End.
+// ============================================================================

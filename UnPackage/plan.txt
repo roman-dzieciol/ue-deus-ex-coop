@@ -1,0 +1,51 @@
+
+== What is UnPackage
+
+ * Minimalistic 3rd party library exposing internals of Unreal Engine packages. 
+
+
+== Intended audience
+
+ * Developers working with Unreal Engine.
+ * Advanced end users.
+
+
+== About
+
+Applications are typically hardcoded to work with only specific file format. Any changes to the format can easily make it  incompatible with existing tools.
+
+In recent years we've seen rapid evolution of the Unreal Engine and exponential increases in number of engine licencees. Each new product or update may modify the file format. Existing 3rd party applications may no longer work with new format. The tool developer has to find out what was changed and add support for it. That means keeping eye on tens of UE products.  Expecting this from all tool developers is unrealistic, they have better things to do. The tool might simply be no longer supported by the developer. In such environment we do see tools appear now and then, unfortunately most of them work with only only one specific product even though they could work with many.
+
+UnPackage takes the burden of supporting different package file formats off the tool developers. Anyone with knowledge of new file format can publish format specification file allowing all Unrilites-based applications to support it. It takes just one person and that person doesn't have to be the tool developer. 
+
+Relying on UnPackage will let you focus on your tool instead of the file format details. Support for many file formats will expose your tool to larger audience. Universal file format specification files will help your tool stay compatible with latest file format evolutions, without your intervention. This is what UnPackage is about.
+
+
+== Unique selling points, Developer point of View
+
+ * Hides details and differences of package file formats behind universal API.
+ * Package file formats database is made of easy to create human-readable XML files.
+ * Package file format specifications can be shared between applications based on UnPackage.
+ * Platform-independent, runs on Windows, Mac and Linux.
+
+ 
+== Unique selling points, End User point of view
+
+ * Applications based on UnPackage support many Unreal Engine products.
+ * Support for new incompatible products can be easily added by downloading or creating a configuration file.
+ * One configuration file can enable support for certain product in any application based on UnPackage.
+ * Platform-independent, runs on Windows, Mac and Linux.
+
+
+== Provided binaries
+
+ * Configuration GUI
+ * Package Viewer
+
+
+== Application ideas
+
+ * Package inspector (command line)
+
+
+== EOF

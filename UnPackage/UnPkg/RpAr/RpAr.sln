@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RpAr", "RpAr.vcproj", "{B49C328F-5E54-49A2-8B40-C7C750ECE22F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RpArCl", "..\RpArCl\RpArCl.vcproj", "{DD4284AE-02F3-440E-A815-A7BB7A7EE2FA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B49C328F-5E54-49A2-8B40-C7C750ECE22F} = {B49C328F-5E54-49A2-8B40-C7C750ECE22F}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B49C328F-5E54-49A2-8B40-C7C750ECE22F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B49C328F-5E54-49A2-8B40-C7C750ECE22F}.Debug|Win32.Build.0 = Debug|Win32
+		{B49C328F-5E54-49A2-8B40-C7C750ECE22F}.Release|Win32.ActiveCfg = Release|Win32
+		{B49C328F-5E54-49A2-8B40-C7C750ECE22F}.Release|Win32.Build.0 = Release|Win32
+		{DD4284AE-02F3-440E-A815-A7BB7A7EE2FA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DD4284AE-02F3-440E-A815-A7BB7A7EE2FA}.Debug|Win32.Build.0 = Debug|Win32
+		{DD4284AE-02F3-440E-A815-A7BB7A7EE2FA}.Release|Win32.ActiveCfg = Release|Win32
+		{DD4284AE-02F3-440E-A815-A7BB7A7EE2FA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

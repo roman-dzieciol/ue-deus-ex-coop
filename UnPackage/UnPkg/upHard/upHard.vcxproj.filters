@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Docs">
+      <UniqueIdentifier>{f068b8f8-c1ce-4627-b002-fd4acade2e59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Precompiled">
+      <UniqueIdentifier>{f1dda1e0-9b14-4260-8bde-167e1a7f5205}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Package">
+      <UniqueIdentifier>{d8fa932a-7abe-41dd-820e-a151ba58db0c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Package\Headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Package\Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Base">
+      <UniqueIdentifier>{dcc76f9d-e356-4121-b8ad-30fcf45f3f82}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Source">
+      <UniqueIdentifier>{aa85611b-0f77-4c67-83c3-fa3a454d8a6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Base\Headers">
+      <UniqueIdentifier>{446e646f-1dcf-4722-9704-0937ccf5a6f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Res">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
+    </Filter>
+    <Filter Include="Delta">
+      <UniqueIdentifier>{a3f9888d-cf0f-4b1d-a160-631e2480e746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Delta\Headers">
+      <UniqueIdentifier>{c001844e-d614-499a-ae98-4bd9d48e3ddf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Delta\Source">
+      <UniqueIdentifier>{8c7762e9-376e-45ad-afab-c9568e2aa5b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UnPackage">
+      <UniqueIdentifier>{4f817f34-39f9-474b-8a42-02df80ff030b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UnPackage\Source">
+      <UniqueIdentifier>{954f8371-3272-4acb-91f9-65b5a53abda2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UnPackage\Headers">
+      <UniqueIdentifier>{30e2a16e-8903-4c09-a5f4-5b37aed2a092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor">
+      <UniqueIdentifier>{7eb700e8-0513-48f2-a1a8-8789cdea96f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\Source">
+      <UniqueIdentifier>{522f1465-2e55-43ba-90db-6ae7e252ed1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Vendor\Headers">
+      <UniqueIdentifier>{c3da0caa-1fab-47d2-b996-f64429594399}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Docs\DeltaFormat.txt">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="Docs\ReadMe.txt">
+      <Filter>Docs</Filter>
+    </None>
+    <None Include="Docs\wxJunk.txt">
+      <Filter>Docs</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\updTypes.cpp">
+      <Filter>Docs</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upPrec.cpp">
+      <Filter>Precompiled</Filter>
+    </ClCompile>
+    <ClCompile Include="src\uppObjData.cpp">
+      <Filter>Package\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\uppObject.cpp">
+      <Filter>Package\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\uppPkg.cpp">
+      <Filter>Package\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\uppProperty.cpp">
+      <Filter>Package\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\uppStructObjs.cpp">
+      <Filter>Package\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\uppStructPrims.cpp">
+      <Filter>Package\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\uppStructs.cpp">
+      <Filter>Package\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\uppTables.cpp">
+      <Filter>Package\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\uppTypes.cpp">
+      <Filter>Package\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upBuild.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upExceptions.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upLog.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upStats.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upTimer.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upTypes.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upUtil.cpp">
+      <Filter>Base\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\updObject.cpp">
+      <Filter>Delta\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\updPkg.cpp">
+      <Filter>Delta\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\updProperty.cpp">
+      <Filter>Delta\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\updTables.cpp">
+      <Filter>Delta\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\updTran.cpp">
+      <Filter>Delta\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upArchive.cpp">
+      <Filter>UnPackage\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upFile.cpp">
+      <Filter>UnPackage\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\upFileBuffer.cpp">
+      <Filter>UnPackage\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\sha1.cpp">
+      <Filter>Vendor\Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\upPrec.h">
+      <Filter>Precompiled</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uppObjData.h">
+      <Filter>Package\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uppObject.h">
+      <Filter>Package\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uppPkg.h">
+      <Filter>Package\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uppProperty.h">
+      <Filter>Package\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uppStructObjs.h">
+      <Filter>Package\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uppStructPrims.h">
+      <Filter>Package\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uppStructs.h">
+      <Filter>Package\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uppTables.h">
+      <Filter>Package\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\uppTypes.h">
+      <Filter>Package\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upBuild.h">
+      <Filter>Base\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upExceptions.h">
+      <Filter>Base\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upLib.h">
+      <Filter>Base\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upLog.h">
+      <Filter>Base\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upStats.h">
+      <Filter>Base\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upTimer.h">
+      <Filter>Base\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upTypes.h">
+      <Filter>Base\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upUtil.h">
+      <Filter>Base\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\updObject.h">
+      <Filter>Delta\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\updPkg.h">
+      <Filter>Delta\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\updProperty.h">
+      <Filter>Delta\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\updTables.h">
+      <Filter>Delta\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\updTran.h">
+      <Filter>Delta\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\updTypes.h">
+      <Filter>Delta\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upArchive.h">
+      <Filter>UnPackage\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upFile.h">
+      <Filter>UnPackage\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\upFileBuffer.h">
+      <Filter>UnPackage\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\sha1.h">
+      <Filter>Vendor\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
