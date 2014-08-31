@@ -259,8 +259,29 @@ typedef upstData<byte>				upsByte;
 typedef upstData<word>				upsWord;
 typedef upstData<dword>				upsDword;
 typedef upstData<qword>				upsQword;
-typedef upstData<float>				upsFloat;
+//typedef upstData<float>				upsFloat;
 
+// ============================================================================
+//  upsFloat ::
+// ============================================================================
+class upsFloat : public upstData<float>
+{
+public:
+	upsFloat( upsObject* parent=NULL, upsObject* first=NULL ) 
+	: upstData(parent,first)
+	{
+	}
+
+	upsFloat( const upsFloat& base, upsObject* parent=NULL, upsObject* first=NULL ) 
+	:	upstData(base,parent,first)
+	{
+	}
+
+	virtual bool IsModified( upsObject& other, updTran& )
+	{ 
+		return memcmp(&GetData(),&static_cast<upsFloat&>(other).GetData(),sizeof(float)) != 0;
+	}
+};
 
 // ============================================================================
 //  upstObj :: package object index

@@ -12,15 +12,38 @@
 #pragma warning( push )
 #pragma warning( disable : 4355 )
 
+// ----------------------------------------------------------------------------
+//  upspFloat :: because -0, +0 and NaN's should be unique
+// ----------------------------------------------------------------------------
+struct upspFloat
+{
+	float F;
+
+	friend bool operator == ( const upspFloat& a, const upspFloat& b ) 
+	{ 
+		return memcmp(&a.F,&b.F,sizeof(float)) == 0;
+	}
+
+	friend bool operator != ( const upspFloat& a, const upspFloat& b ) 
+	{ 
+		return memcmp(&a.F,&b.F,sizeof(float)) != 0;
+	}
+	
+	friend void operator << ( upArchive& A, upspFloat& D )
+	{
+		A << D.F;
+	}
+};
+
 
 // ----------------------------------------------------------------------------
 //  upspVector
 // ----------------------------------------------------------------------------
 struct upspVector
 {
-	float X;
-	float Y;
-	float Z;
+	upspFloat X;
+	upspFloat Y;
+	upspFloat Z;
 
 	friend bool operator == ( const upspVector& a, const upspVector& b ) 
 	{ 
@@ -49,10 +72,10 @@ typedef upstData<upspVector> upsVector;
 // ----------------------------------------------------------------------------
 struct upspPlane
 {
-	float X;
-	float Y;
-	float Z;	
-	float W;
+	upspFloat X;
+	upspFloat Y;
+	upspFloat Z;	
+	upspFloat W;
 
 	friend bool operator == ( const upspPlane& a, const upspPlane& b ) 
 	{ 
@@ -112,7 +135,7 @@ typedef upstData<upspBoundingBox> upsBoundingBox;
 struct upspBoundingSphere
 {
 	upspVector Center;
-	float Radius;
+	upspFloat Radius;
 
 	friend bool operator == ( const upspBoundingSphere& a, const upspBoundingSphere& b ) 
 	{ 
@@ -224,10 +247,10 @@ typedef upstData<upspMapItem> upsMapItem;
 struct upspAIEventSettings
 {
 public:
-	float visual;
-	float audio;
-	float audioRadius;
-	float smell;
+	upspFloat visual;
+	upspFloat audio;
+	upspFloat audioRadius;
+	upspFloat smell;
 
 	friend bool operator == ( const upspAIEventSettings& a, const upspAIEventSettings& b ) 
 	{ 
