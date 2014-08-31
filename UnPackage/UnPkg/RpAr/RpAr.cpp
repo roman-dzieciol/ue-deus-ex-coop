@@ -17,6 +17,10 @@
 
 // TODO: finish exceptions, ie on rename
 
+inline int RpHasFlag( int val, int flag )
+{
+	return (val & flag) == flag;
+}
 
 BOOL APIENTRY DllMain( HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved )
 {
@@ -49,6 +53,7 @@ struct FIntException
 struct FDeltaHash
 {
 	dword Data[5];
+	dword Length;
 
 	friend int operator == ( const FDeltaHash& left, const FDeltaHash& right )
 	{
@@ -56,7 +61,8 @@ struct FDeltaHash
 		&&		left.Data[1] == right.Data[1]
 		&&		left.Data[2] == right.Data[2]
 		&&		left.Data[3] == right.Data[3]
-		&&		left.Data[4] == right.Data[4];
+		&&		left.Data[4] == right.Data[4]
+		&&		left.Length == right.Length;
 	}
 
 	friend int operator != ( const FDeltaHash& left, const FDeltaHash& right )
@@ -68,17 +74,26 @@ struct FDeltaHash
 	{
 		if( f.Write( Data, GetHashSize() ) != GetHashSize() )
 			throw FIntException(270);
+		if( f.Write( &Length, sizeof(dword) ) != sizeof(dword) )
+			throw FIntException(271);
 	}
 
 	void Read( wxFile& f )
 	{
 		if( f.Read( Data, GetHashSize() ) != GetHashSize() )
 			throw FIntException(220);
+		if( f.Read( &Length, sizeof(dword) ) != sizeof(dword) )
+			throw FIntException(221);
 	}
 
 	static int GetHashSize()
 	{
 		return sizeof(dword)*5;
+	}
+
+	static int GetSerialSize()
+	{
+		return GetHashSize() + sizeof(dword)*1;
 	}
 };
 
@@ -102,9 +117,9 @@ struct FDeltaIntegrity
 		return	!(left == right);
 	}
 
-	static int GetHashesSize()
+	static int GetSerialSize()
 	{
-		return	FDeltaHash::GetHashSize() * 4;
+		return	FDeltaHash::GetSerialSize() * 4;
 	}
 
 	void Write( wxString filename )
@@ -115,7 +130,7 @@ struct FDeltaIntegrity
 			Map.Write(f);
 			Save.Write(f);
 			Delta.Write(f);
-			Compressed.Write(f);
+			Compressed.Write(f);			
 			return;
 		}
 		throw FIntException(250);
@@ -126,7 +141,7 @@ struct FDeltaIntegrity
 		wxFile f;
 		if( f.Open(filename,wxFile::read) )
 		{
-			if( f.SeekEnd(-GetHashesSize()) != wxInvalidOffset )
+			if( f.SeekEnd(-GetSerialSize()) != wxInvalidOffset )
 			{
 				Map.Read(f);
 				Save.Read(f);
@@ -138,222 +153,255 @@ struct FDeltaIntegrity
 		throw FIntException(200);
 	}
 
+	static void CalcHash( wxString filename, FDeltaHash& hash, int offset=0 )
+	{
+		wxFile f;
+		if( f.Open(filename,wxFile::read) )
+		{
+			hash.Length = f.Length() + offset;
+			if( hash.Length > 1 )
+			{
+				vector<byte> buffer;
+				buffer.reserve(hash.Length);
+				buffer.resize(hash.Length);
+				if( f.Read(&buffer[0],hash.Length) == hash.Length )
+				{
+					static SHA1 sha;
+					sha.Reset();
+					sha.Input(&buffer[0],hash.Length);
+					sha.Result(hash.Data);
+					return;
+				}
+			}
+		}
+		throw FIntException(150);
+	}
+
 	void DumpHashes()
 	{
-		wxLogMessage( wxT("%.8x%.8x%.8x%.8x%.8x"), Map.Data[0], Map.Data[1], Map.Data[2], Map.Data[3], Map.Data[4] );
-		wxLogMessage( wxT("%.8x%.8x%.8x%.8x%.8x"), Delta.Data[0], Delta.Data[1], Delta.Data[2], Delta.Data[3], Delta.Data[4] );
-		wxLogMessage( wxT("%.8x%.8x%.8x%.8x%.8x"), Save.Data[0], Save.Data[1], Save.Data[2], Save.Data[3], Save.Data[4] );
-		wxLogMessage( wxT("%.8x%.8x%.8x%.8x%.8x"), Compressed.Data[0], Compressed.Data[1], Compressed.Data[2], Compressed.Data[3], Compressed.Data[4] );
+		wxLogMessage( wxT("%.8x%.8x%.8x%.8x%.8x"), Map.Data[0], Map.Data[1], Map.Data[2], Map.Data[3], Map.Data[4], Map.Length );
+		wxLogMessage( wxT("%.8x%.8x%.8x%.8x%.8x"), Delta.Data[0], Delta.Data[1], Delta.Data[2], Delta.Data[3], Delta.Data[4], Map.Length );
+		wxLogMessage( wxT("%.8x%.8x%.8x%.8x%.8x"), Save.Data[0], Save.Data[1], Save.Data[2], Save.Data[3], Save.Data[4], Map.Length );
+		wxLogMessage( wxT("%.8x%.8x%.8x%.8x%.8x"), Compressed.Data[0], Compressed.Data[1], Compressed.Data[2], Compressed.Data[3], Compressed.Data[4], Map.Length );
 	}
 };
 
-void GetFileHash( wxString filename, FDeltaHash& hash, int offset=0 )
+
+RPAR_API int RpPack( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int flags )
 {
-	wxFile f;
-	if( f.Open(filename,wxFile::read) )
+	if( RpHasFlag(flags,AM_Verbose) )
 	{
-		int length = f.Length() + offset;
-		if( length > 1 )
+		try
 		{
-			vector<byte> buffer;
-			buffer.reserve(length);
-			buffer.resize(length);
-			if( f.Read(&buffer[0],length) == length )
-			{
-				static SHA1 sha;
-				sha.Reset();
-				sha.Input(&buffer[0],length);
-				sha.Result(hash.Data);
-				return;
-			}
+			wxLogMessage(wxT("RpPack %s %s %s %.8x"), map, save, delta, flags);
+			return RpPackInternal(map,save,delta,flags);
 		}
+		catch( FIntException err ) { return err.Error; }
+		catch( upexception& e ) { wxLogError(wxT("%s"), e.wwhat()); return -1; }		  
+		catch( exception& e ) { wxLogError(wxT("%hs"), e.what()); return -1; }	  
+		catch( ... ) { wxLogError(wxT("unknown exception")); return -1; }
 	}
-	throw FIntException(150);
+	else
+	{
+		try
+		{
+			return RpPackInternal(map,save,delta,flags);
+		}
+		catch( FIntException err ) { return err.Error; }
+		catch(...) { return -1; }
+	}
 }
 
-RPAR_API int RpPack( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int mode )
+int RpPackInternal( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int flags )
 {
-	try
+	wxString mapstr = map; // dx
+	wxString savestr = save; // dxs
+	wxString deltastr = delta; // dxd
+	wxString tempstr = deltastr + wxT("t"); // dxdt
+
+	// if delta needs to be created
+	if( map != save )
 	{
-		wxString mapstr = map; // dx
-		wxString savestr = save; // dxs
-		wxString deltastr = delta; // dxd
-		wxString tempstr = deltastr + wxT("t"); // dxdt
-
-		// if delta needs to be created
-		if( map != save )
+		// keep in block so handles are freed
 		{
-			// keep in block so handles are freed
-			{
-				// prepare files
-				upFileReader mapfr( mapstr );
-				upFileReader savefr( savestr );
-				upFileWriter deltafw( deltastr, savefr.Length() );
+			// prepare files
+			upFileReader mapfr( mapstr );
+			upFileReader savefr( savestr );
+			upFileWriter deltafw( deltastr, wxMax(mapfr.Length(),savefr.Length()) );
 
-				// load map
-				uppPkg mappkg;
-				mappkg.Serialize(mapfr);
+			// load map
+			uppPkg mappkg;
+			mappkg.Serialize(mapfr);
 
-				// load save
-				uppPkg savepkg;
-				savepkg.Serialize(savefr);
+			// load save
+			uppPkg savepkg;
+			savepkg.Serialize(savefr);
 
-				// create delta
-				updPkg deltapkg(mappkg,savepkg);
-				deltapkg.Serialize(deltafw);
-			}
-				
-			// compress
-			RpCompress(deltastr,tempstr);
+			// create delta
+			updPkg deltapkg(mappkg,savepkg);
+			deltapkg.Serialize(deltafw);
+		}
+			
+		// compress
+		RpCompress(deltastr,tempstr);
 
-			// hashes
-			FDeltaIntegrity integrity;
-			GetFileHash( mapstr, integrity.Map );
-			GetFileHash( savestr, integrity.Save );
-			GetFileHash( deltastr, integrity.Delta );
-			GetFileHash( tempstr, integrity.Compressed );
-			integrity.Write( tempstr );
-			//integrity.DumpHashes();
+		// hashes
+		FDeltaIntegrity integrity;
+		FDeltaIntegrity::CalcHash( mapstr, integrity.Map );
+		FDeltaIntegrity::CalcHash( savestr, integrity.Save );
+		FDeltaIntegrity::CalcHash( deltastr, integrity.Delta );
+		FDeltaIntegrity::CalcHash( tempstr, integrity.Compressed );
+		integrity.Write( tempstr );
 
+		if( RpHasFlag(flags,AM_DumpHashes) )
+			integrity.DumpHashes();
+		
+		// rename compressed to delta filename
+		if( !wxRenameFile(tempstr,deltastr,true) )
+			throw FIntException(300);
+	}
+	else
+	{
+		// Create 1-byte long file
+		wxFile f;
+		if( !f.Open(deltastr,wxFile::write) )
+			throw FIntException(400);
+		byte b = 1;
+		f.Write(&b,1);
+		f.Close();
+	}
+	
+	return 0;
+}
+
+RPAR_API int RpUnpack( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int flags )
+{
+	if( RpHasFlag(flags,AM_Verbose) )
+	{
+		try
+		{
+			wxLogMessage(wxT("RpUnpack %s %s %s %.8x"), map, save, delta, flags);
+			return RpUnpackInternal(map,save,delta,flags);
+		}
+		catch( FIntException err ) { return err.Error; }
+		catch( upexception& e ) { wxLogError(wxT("%s"), e.wwhat()); return -1; }		  
+		catch( exception& e ) { wxLogError(wxT("%hs"), e.what()); return -1; }	  
+		catch( ... ) { wxLogError(wxT("unknown exception")); return -1; }
+	}
+	else
+	{
+		try
+		{
+			return RpUnpackInternal(map,save,delta,flags);
+		}
+		catch( FIntException err ) { return err.Error; }
+		catch(...) { return -1; }
+	}
+}
+
+int RpUnpackInternal( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int flags )
+{
+	wxString mapstr = map; // dx
+	wxString savestr = save; // dxs
+	wxString deltastr = delta; // dxd
+	wxString tempstr = deltastr + wxT("t"); // dxdt
+
+	// get delta length
+	wxFile f;
+	if( !f.Open(deltastr,wxFile::read) )
+		throw FIntException(400);
+	int i = f.Length();
+	f.Close();
+
+	// if delta length == 1, copy the map
+	if( i == 1 )
+	{
+		wxCopyFile(mapstr,savestr,true);
+		return 2;
+	}
+	else
+	{
+		// delta hashes
+		FDeltaIntegrity delta_integrity;
+		delta_integrity.Read( deltastr );
+		if( RpHasFlag(flags,AM_DumpHashes) )
+			delta_integrity.DumpHashes();
+
+		// decompress
+		RpDecompress(deltastr,tempstr);
+
+		// partial local hashes
+		FDeltaIntegrity integrity;
+		FDeltaIntegrity::CalcHash( mapstr, integrity.Map );
+		FDeltaIntegrity::CalcHash( tempstr, integrity.Delta );
+		FDeltaIntegrity::CalcHash( deltastr, integrity.Compressed, -FDeltaIntegrity::GetSerialSize() );
+
+		if( RpHasFlag(flags,AM_DumpHashes) )
+			integrity.DumpHashes();
+
+
+		// verify hashes
+		if( delta_integrity.Map != integrity.Map )					throw FIntException(101);
+		if( delta_integrity.Delta != integrity.Delta )				throw FIntException(102);
+		if( delta_integrity.Compressed != integrity.Compressed )	throw FIntException(103);
+		
+		// handle compressed file
+		if( !RpHasFlag(flags,AM_SilentUnpack) )
+		{
 			// rename compressed to delta filename
 			if( !wxRenameFile(tempstr,deltastr,true) )
 				throw FIntException(300);
 		}
 		else
 		{
-			// Create 1-byte long file
-			wxFile f;
-			if( !f.Open(deltastr,wxFile::write) )
-				throw FIntException(400);
-			byte b = 1;
-			f.Write(&b,1);
-			f.Close();
+			deltastr = tempstr;
 		}
 		
-		return 0;
-	
-	}
-	catch(FIntException err)
-	{
-		return err.Error;
-	}
-	catch(...)
-	{
-		return -1;
-	}
-}
-
-RPAR_API int RpUnpack( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int mode )
-{
-	try
-	{
-		wxString mapstr = map; // dx
-		wxString savestr = save; // dxs
-		wxString deltastr = delta; // dxd
-		wxString tempstr = deltastr + wxT("t"); // dxdt
-
-		// get delta length
-		wxFile f;
-		if( !f.Open(deltastr,wxFile::read) )
-			throw FIntException(400);
-		int i = f.Length();
-		f.Close();
-
-		// if delta length == 1, copy the map
-		if( i == 1 )
+		// keep in block so handles are freed
 		{
-			wxCopyFile(mapstr,savestr,true);
-			return 2;
-		}
-		else
-		{
-			// delta hashes
-			FDeltaIntegrity delta_integrity;
-			delta_integrity.Read( deltastr );
-			//delta_integrity.DumpHashes();
+			// prepare files
+			upFileReader mapfr( mapstr );
+			upFileWriter savefw( savestr, delta_integrity.Save.Length );
+			upFileReader deltafr( deltastr );
 
-			// decompress
-			RpDecompress(deltastr,tempstr);
+			// load map
+			uppPkg mappkg;
+			mappkg.Serialize(mapfr);
 
-			// partial local hashes
-			FDeltaIntegrity integrity;
-			GetFileHash( mapstr, integrity.Map );
-			GetFileHash( tempstr, integrity.Delta );
-			GetFileHash( deltastr, integrity.Compressed, -FDeltaIntegrity::GetHashesSize() );
-			//integrity.DumpHashes();
+			// apply delta
+			uppPkg savepkg;
+			updPkg deltapkg(mappkg,savepkg);
+			deltapkg.Serialize(deltafr);
 
-			// verify hashes
-			if( delta_integrity.Map != integrity.Map )					throw FIntException(101);
-			if( delta_integrity.Delta != integrity.Delta )				throw FIntException(102);
-			if( delta_integrity.Compressed != integrity.Compressed )	throw FIntException(103);
-				
-			// rename compressed to delta filename
-			if( !wxRenameFile(tempstr,deltastr,true) )
-				throw FIntException(300);
-			
-			// keep in block so handles are freed
-			{
-				// prepare files
-				upFileReader mapfr( mapstr );
-				upFileWriter savefw( savestr, mapfr.Length() );
-				upFileReader deltafr( deltastr );
-
-				// load map
-				uppPkg mappkg;
-				mappkg.Serialize(mapfr);
-
-				// apply delta
-				uppPkg savepkg;
-				updPkg deltapkg(mappkg,savepkg);
-				deltapkg.Serialize(deltafr);
-
-				// write save
-				savepkg.Serialize(savefw);
-			}
-
-			// verify savegame hash
-			GetFileHash( savestr, integrity.Save );
-			//integrity.DumpHashes();
-			if( delta_integrity.Save != integrity.Save )
-				throw FIntException(104);
+			// write save
+			savepkg.Serialize(savefw);
 		}
 
+		// verify savegame hash
+		FDeltaIntegrity::CalcHash( savestr, integrity.Save );
 
-		return 0;
-	
+		if( RpHasFlag(flags,AM_DumpHashes) )
+			integrity.DumpHashes();
+
+		if( delta_integrity.Save != integrity.Save )
+			throw FIntException(104);
+
+		// handle compressed file
+		if( RpHasFlag(flags,AM_SilentUnpack) )
+		{
+			if( !wxRemoveFile(tempstr) )
+				throw FIntException(301);
+		}
 	}
-	catch(FIntException err)
-	{
-		return err.Error;
-	}
-	catch(...)
-	{
-		return -1;
-	}
+
+
+	return 0;
 }
 
 RPAR_API int RpIsError( int idx )
 {
 	return idx < 0 || idx >= 100;
 }
-
-// This is an example of an exported variable
-//RPAR_API int nRpAr=0;
-
-// This is an example of an exported function.
-//RPAR_API int fnRpAr(void)
-//{
-//	return 42;
-//}
-
-// This is the constructor of a class that has been exported.
-// see RpAr.h for the class definition
-//CRpAr::CRpAr()
-//{
-//	return;
-//}
-
-
 
 // ============================================================================
 //	The End.

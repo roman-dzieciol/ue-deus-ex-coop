@@ -11,9 +11,22 @@
 #endif
 
 
-extern "C" RPAR_API int RpPack( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int mode=0 );
-extern "C" RPAR_API int RpUnpack( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int mode=0 );
+enum EArchiveFlags
+{
+	AF_None					= 0x00000000
+,	AM_SilentUnpack			= 0x00000010
+,	AM_Verbose				= 0x00000020
+,	AM_DumpHashes			= 0x00000040
+,	AM_AllFlags				= 0xFFFFFFFF
+};
+
+
+extern "C" RPAR_API int RpPack( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int flags=0 );
+extern "C" RPAR_API int RpUnpack( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int flags=0 );
 extern "C" RPAR_API int RpIsError( int idx );
+
+int RpPackInternal( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int flags=0 );
+int RpUnpackInternal( const wchar_t* map, const wchar_t* save, const wchar_t* delta, int flags=0 );
 
 // This class is exported from the RpAr.dll
 //class RPAR_API CRpAr {
